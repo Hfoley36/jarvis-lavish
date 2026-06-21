@@ -16,7 +16,7 @@ import { initDefaultTelemetry } from "./telemetry.js";
 
 const COMMANDS = new Set(["open", "poll", "end", "stop", "server", "playbook", "design", "setup"]);
 const DESCRIPTION =
-  "Lavish Editor helps agents turn rich HTML artifacts into collaborative human review surfaces. Whenever you are about to give user a complex response that will be easier to understand via a rich / interactive page, consider using Lavish Editor. " +
+  "ZILO Plan Editor helps agents turn rich HTML artifacts into collaborative human review surfaces. Whenever you are about to give user a complex response that will be easier to understand via a rich / interactive page, consider using ZILO Plan Editor. " +
   "First generate an interactive HTML artifact according to user request, then run `lavish-axi <html-file>` so the user can visually review it, annotate elements or selected text, queue prompts, and send feedback back through `lavish-axi poll`.";
 // Inlined at build time from package.json; falls back to reading package.json so source-run tests work.
 export const VERSION =
@@ -119,7 +119,7 @@ export function createHomeOutput({ bin, sessions, includeSessions = true }) {
     ],
     playbooks: listPlaybooks(),
     help: [
-      "Run `lavish-axi <html-file>` to open or resume a Lavish Editor session",
+      "Run `lavish-axi <html-file>` to open or resume a ZILO Plan Editor session",
       "Unless the user specifies another location, create HTML artifacts in the current working directory under `.lavish/`",
       "Lavish serves the html file through a local express.js server. If your html needs to reference other filesystem assets such as images, CSS, fonts, and local scripts, copy them into the same directory as the HTML file, then reference them with relative paths from that directory. Never prepend `/` to those asset paths - root paths won't work",
       "Run `lavish-axi poll <html-file>` to wait for user feedback or browser-reported layout_warnings. It long-polls and stays silent until the user sends feedback, ends the session, or the real browser reports fresh layout_warnings, so leave it running - never kill it. Fix layout_warnings before involving the human. If your harness limits how long a foreground command may run, run the poll as a background task; if it gets killed or times out anyway, just re-run it - queued feedback is never lost",
@@ -157,7 +157,7 @@ export function createPlaybookOutput(args) {
 export function createOpenOutput({ file, url, status }) {
   return {
     session: { file, url, status },
-    next_step: `Do not respond to the user just yet. Now you must run \`lavish-axi poll ${file}\`. This command long-polls until the user sends feedback, ends the session, or the real browser reports layout_warnings from the in-iframe layout audit, and it stays silent the whole time - that is normal, never kill it. If layout_warnings arrive, fix overflow, clipped text, or overlapping unreadable content and re-check before involving the human. Do not pass --timeout-ms during normal agent use. If your harness limits how long a foreground command may run, run the poll as a background task and wait for it to finish; if the poll still gets killed or times out, just re-run it - queued feedback is never lost. After applying feedback, run \`lavish-axi poll ${file} --agent-reply "<message for the user>"\` without --timeout-ms to show your response in Lavish Editor and wait for more feedback.`,
+    next_step: `Do not respond to the user just yet. Now you must run \`lavish-axi poll ${file}\`. This command long-polls until the user sends feedback, ends the session, or the real browser reports layout_warnings from the in-iframe layout audit, and it stays silent the whole time - that is normal, never kill it. If layout_warnings arrive, fix overflow, clipped text, or overlapping unreadable content and re-check before involving the human. Do not pass --timeout-ms during normal agent use. If your harness limits how long a foreground command may run, run the poll as a background task and wait for it to finish; if the poll still gets killed or times out, just re-run it - queued feedback is never lost. After applying feedback, run \`lavish-axi poll ${file} --agent-reply "<message for the user>"\` without --timeout-ms to show your response in ZILO Plan Editor and wait for more feedback.`,
   };
 }
 
@@ -267,7 +267,7 @@ export function startPollWaitReporter({
 
 export function createPollOutput({ file, response }) {
   if (response.status === "missing") {
-    throw new AxiError("No active Lavish Editor session for this file", "NOT_FOUND", [
+    throw new AxiError("No active ZILO Plan Editor session for this file", "NOT_FOUND", [
       `Run \`lavish-axi ${file}\` first`,
     ]);
   }
@@ -309,7 +309,7 @@ async function endCommand(args) {
   return { session: { file: absolute, status: response.status || "ended" } };
 }
 
-// Explicitly shut down the running Lavish Editor server. Unlike `end` (which closes a single
+// Explicitly shut down the running ZILO Plan Editor server. Unlike `end` (which closes a single
 // session), this stops the background process so it stops dangling between sessions.
 export async function stopCommand(args) {
   const port = Number(flagValue(args, "--port") || defaultPort());
@@ -396,7 +396,7 @@ async function visibleSessions() {
 
 async function assertHtmlFile(file) {
   if (!isHtmlPath(file)) {
-    throw new AxiError("Lavish Editor expects an HTML file", "VALIDATION_ERROR", ["Run `lavish-axi <html-file>`"]);
+    throw new AxiError("ZILO Plan Editor expects an HTML file", "VALIDATION_ERROR", ["Run `lavish-axi <html-file>`"]);
   }
   try {
     await access(file);
@@ -447,7 +447,7 @@ async function ensureServer({ forceRestart = false } = {}) {
     }
     await delay(100);
   }
-  throw new AxiError("Lavish Editor server did not start", "SERVER_ERROR", [
+  throw new AxiError("ZILO Plan Editor server did not start", "SERVER_ERROR", [
     `Run \`lavish-axi server --port ${port}\` to inspect server startup`,
   ]);
 }
@@ -611,7 +611,7 @@ export async function fetchJson(url, { retries = 0, retryDelayMs = 250 } = {}) {
 
   if (!response) throw serverConnectionError();
   if (!response.ok) {
-    throw new AxiError(`Lavish Editor request failed: ${response.status}`, "SERVER_ERROR");
+    throw new AxiError(`ZILO Plan Editor request failed: ${response.status}`, "SERVER_ERROR");
   }
   try {
     return await response.json();
@@ -632,20 +632,20 @@ async function postJson(url, body) {
     throw serverConnectionError();
   }
   if (!response.ok) {
-    throw new AxiError(`Lavish Editor request failed: ${response.status}`, "SERVER_ERROR");
+    throw new AxiError(`ZILO Plan Editor request failed: ${response.status}`, "SERVER_ERROR");
   }
   return response.json();
 }
 
 function serverConnectionError() {
-  return new AxiError("Lavish Editor server connection failed", "SERVER_ERROR", [
+  return new AxiError("ZILO Plan Editor server connection failed", "SERVER_ERROR", [
     "Run `lavish-axi server --verbose` or inspect `~/.lavish-axi/server.log` (`LAVISH_AXI_STATE_DIR/server.log` when set) for server startup or crash diagnostics",
     "Re-run the last `lavish-axi poll <html-file>` command after the server is healthy",
   ]);
 }
 
 function pollResponseInterruptedError() {
-  return new AxiError("Lavish Editor poll response was interrupted", "SERVER_ERROR", [
+  return new AxiError("ZILO Plan Editor poll response was interrupted", "SERVER_ERROR", [
     "Run `lavish-axi server --verbose` or inspect `~/.lavish-axi/server.log` (`LAVISH_AXI_STATE_DIR/server.log` when set) for server startup or crash diagnostics",
     "Re-run the last `lavish-axi poll <html-file>` command after the server is healthy",
   ]);
@@ -667,17 +667,17 @@ export function getCommandHelp(command) {
   return COMMAND_HELP[command] || null;
 }
 
-const TOP_LEVEL_HELP = `lavish-axi - Lavish Editor AXI\n\nUsage:\n  lavish-axi\n  lavish-axi <html-file> [--no-open] [--no-gate]\n  lavish-axi poll <html-file> [--agent-reply "..."]\n  lavish-axi end <html-file>\n  lavish-axi stop\n  lavish-axi playbook [playbook_id]\n  lavish-axi design\n  lavish-axi setup hooks\n\n${DESIGN_SYSTEM_HINT}\n\nNote: poll long-polls indefinitely by default until the user sends feedback, ends the session, or the browser reports fresh layout_warnings, staying silent while it waits - never kill it. Fix layout_warnings before involving the human. Do not pass --timeout-ms during normal agent use; it is for tests and debugging only. If your harness limits how long a foreground command may run, run the poll as a background task; if it gets killed or times out anyway, just re-run it - queued feedback is never lost.\n\n`;
+const TOP_LEVEL_HELP = `lavish-axi - ZILO Plan Editor AXI\n\nUsage:\n  lavish-axi\n  lavish-axi <html-file> [--no-open] [--no-gate]\n  lavish-axi poll <html-file> [--agent-reply "..."]\n  lavish-axi end <html-file>\n  lavish-axi stop\n  lavish-axi playbook [playbook_id]\n  lavish-axi design\n  lavish-axi setup hooks\n\n${DESIGN_SYSTEM_HINT}\n\nNote: poll long-polls indefinitely by default until the user sends feedback, ends the session, or the browser reports fresh layout_warnings, staying silent while it waits - never kill it. Fix layout_warnings before involving the human. Do not pass --timeout-ms during normal agent use; it is for tests and debugging only. If your harness limits how long a foreground command may run, run the poll as a background task; if it gets killed or times out anyway, just re-run it - queued feedback is never lost.\n\n`;
 
 const COMMAND_HELP = {
-  open: `Usage: lavish-axi <html-file> [--no-open] [--no-gate]\n\nOpen or resume a Lavish Editor review session for an HTML artifact. Use --no-open when you need to ensure the server/session exists without opening another browser window. Use --no-gate to skip the open-time layout curtain for this browser open.\n`,
-  poll: `Usage: lavish-axi poll <html-file> [--agent-reply "..."]\n\nThis command long-polls indefinitely for queued user prompts and browser-reported layout_warnings, then returns them to the agent. It stays silent while it waits - that is normal, never kill it. Fix layout_warnings before involving the human. Do not pass --timeout-ms during normal agent use; it is for tests and debugging only. If your harness limits how long a foreground command may run, run the poll as a background task and wait for it to finish; if it still gets killed or times out, just re-run it - queued feedback is never lost. Use --agent-reply after applying prior feedback to display your response in Lavish Editor before waiting again.\n`,
-  end: `Usage: lavish-axi end <html-file>\n\nEnd a Lavish Editor session.\n`,
-  stop: `Usage: lavish-axi stop [--port <port>]\n\nShut down the background Lavish Editor server. The server also stops itself when no browser or poll has been connected for a while (LAVISH_AXI_IDLE_TIMEOUT_MS, default 30m) and immediately when the last session ends with nothing connected.\n`,
+  open: `Usage: lavish-axi <html-file> [--no-open] [--no-gate]\n\nOpen or resume a ZILO Plan Editor review session for an HTML artifact. Use --no-open when you need to ensure the server/session exists without opening another browser window. Use --no-gate to skip the open-time layout curtain for this browser open.\n`,
+  poll: `Usage: lavish-axi poll <html-file> [--agent-reply "..."]\n\nThis command long-polls indefinitely for queued user prompts and browser-reported layout_warnings, then returns them to the agent. It stays silent while it waits - that is normal, never kill it. Fix layout_warnings before involving the human. Do not pass --timeout-ms during normal agent use; it is for tests and debugging only. If your harness limits how long a foreground command may run, run the poll as a background task and wait for it to finish; if it still gets killed or times out, just re-run it - queued feedback is never lost. Use --agent-reply after applying prior feedback to display your response in ZILO Plan Editor before waiting again.\n`,
+  end: `Usage: lavish-axi end <html-file>\n\nEnd a ZILO Plan Editor session.\n`,
+  stop: `Usage: lavish-axi stop [--port <port>]\n\nShut down the background ZILO Plan Editor server. The server also stops itself when no browser or poll has been connected for a while (LAVISH_AXI_IDLE_TIMEOUT_MS, default 30m) and immediately when the last session ends with nothing connected.\n`,
   playbook: `Usage: lavish-axi playbook [playbook_id]\n\nList focused artifact guidance playbooks, or show one playbook by ID. Known IDs: diagram, table, comparison, plan, code, input, slides.\n\nOne artifact often combines several playbooks (for example a plan that includes a comparison and a diagram), so read every playbook relevant to the artifact, not just one, for the best quality.\n\nExamples:\n  lavish-axi playbook\n  lavish-axi playbook diagram\n  lavish-axi playbook input\n`,
   design: `Usage: lavish-axi design\n\nShow a copy-pasteable CDN snippet for Tailwind CSS browser runtime v4 + DaisyUI v5 + themes, an optional layout safety CSS snippet, plus technical reference for DaisyUI components. Lavish artifacts stay portable HTML. This CDN snippet is the design fallback, not the default: inspect the subject project before falling back, and paste the layout safety CSS only when useful for dense nested grid/flex layouts, badges, wide fonts, or local media. The strict priority order is: (1) if the user asked for a specific look or named design system, follow that; (2) otherwise, match the design system of the project the artifact is about, not necessarily your current working directory. If the artifact previews, proposes, or mocks a specific app's UI, use that app's own design system; (3) only when both come up empty, prefer the Lavish-recommended Tailwind + DaisyUI CDN snippet over hand-writing styles unless explicitly instructed otherwise by the user.\n`,
   setup: `Usage: lavish-axi setup hooks\n\nInstall or repair agent SessionStart hooks for lavish-axi ambient context in Claude Code, Codex, and OpenCode. Restart your agent session afterward to receive the context.\n`,
-  server: `Usage: lavish-axi server [--port 4387] [--verbose]\n\nRun the local Lavish Editor server. Pass --verbose (or set LAVISH_AXI_DEBUG=1) to log session and watcher events to stderr. Detached server output is appended to ~/.lavish-axi/server.log, or LAVISH_AXI_STATE_DIR/server.log when set, for startup and crash diagnostics.\n\nLAVISH_AXI_HOST sets the bind address (default 127.0.0.1; a wildcard 0.0.0.0 or :: binds every interface). Binding beyond loopback exposes an unauthenticated server that can read and serve arbitrary local files to anything that can reach it, so only do so on a trusted network. LAVISH_AXI_LINK_HOST sets the hostname written into generated session links (default: the bind address, or loopback when bound to a wildcard). LAVISH_AXI_NO_OPEN=1 (or --no-open) suppresses the local browser launch.\n`,
+  server: `Usage: lavish-axi server [--port 4387] [--verbose]\n\nRun the local ZILO Plan Editor server. Pass --verbose (or set LAVISH_AXI_DEBUG=1) to log session and watcher events to stderr. Detached server output is appended to ~/.lavish-axi/server.log, or LAVISH_AXI_STATE_DIR/server.log when set, for startup and crash diagnostics.\n\nLAVISH_AXI_HOST sets the bind address (default 127.0.0.1; a wildcard 0.0.0.0 or :: binds every interface). Binding beyond loopback exposes an unauthenticated server that can read and serve arbitrary local files to anything that can reach it, so only do so on a trusted network. LAVISH_AXI_LINK_HOST sets the hostname written into generated session links (default: the bind address, or loopback when bound to a wildcard). LAVISH_AXI_NO_OPEN=1 (or --no-open) suppresses the local browser launch.\n`,
 };
 
 export { createDesignOutput };

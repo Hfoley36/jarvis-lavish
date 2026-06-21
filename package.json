@@ -1,8 +1,8 @@
 {
-  "name": "lavish-axi",
+  "name": "jarvis-lavish",
   "version": "0.1.31",
   "packageManager": "pnpm@11.1.1",
-  "description": "HTML is the new markdown. Lavish is the new editor for your HTML artifacts.",
+  "description": "ZILO Plan Editor — interactive HTML artifact review with annotations, feedback, and agent handoff. Forked from Kun Chen's lavish-axi.",
   "type": "module",
   "bin": {
     "lavish-axi": "dist/cli.mjs"
@@ -58,12 +58,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/kunchenguid/lavish-axi.git"
+    "url": "git+https://github.com/Hfoley36/jarvis-lavish.git"
   },
   "bugs": {
-    "url": "https://github.com/kunchenguid/lavish-axi/issues"
+    "url": "https://github.com/Hfoley36/jarvis-lavish/issues"
   },
-  "homepage": "https://github.com/kunchenguid/lavish-axi#readme",
+  "homepage": "https://github.com/Hfoley36/jarvis-lavish#readme",
   "publishConfig": {
     "access": "public"
   }

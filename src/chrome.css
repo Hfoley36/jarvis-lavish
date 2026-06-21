@@ -1,26 +1,26 @@
 :root {
-  --ink-900: #0f1115;
-  --ink-800: #11141a;
-  --ink-700: #171a21;
-  --ink-600: #1c212b;
-  --steel-700: #2a2f3a;
-  --steel-600: #303745;
-  --steel-500: #3c4557;
-  --steel-400: #8c96aa;
-  --steel-300: #aeb6c6;
-  --steel-200: #b9c0cf;
-  --steel-100: #d8deea;
-  --cream-50: #fffbf3;
-  --cream-100: #f7f3ea;
-  --cream-200: #e8e1cf;
-  --brass-500: #f4c95d;
-  --brass-400: #ffd877;
-  --brass-ink: #17130a;
-  --sage-900: #172419;
-  --sage-700: #315f3a;
-  --sage-300: #8fe39e;
-  --amber-900: #25230f;
-  --amber-700: #5d4d1b;
+  --ink-900: #0f1217;
+  --ink-800: #13181e;
+  --ink-700: #181e26;
+  --ink-600: #1e2631;
+  --steel-700: #26303e;
+  --steel-600: #2e3a4b;
+  --steel-500: #3e4d62;
+  --steel-400: #7c8fa8;
+  --steel-300: #a0b2ca;
+  --steel-200: #bccbde;
+  --steel-100: #dbe5f0;
+  --cream-50: #f2f6fa;
+  --cream-100: #e8eef5;
+  --cream-200: #d5dfed;
+  --brass-500: #3a9a7a;
+  --brass-400: #4db892;
+  --brass-ink: #ffffff;
+  --sage-900: #13241d;
+  --sage-700: #277B65;
+  --sage-300: #6dd4a8;
+  --amber-900: #1a2415;
+  --amber-700: #3d5a2e;
   --rust-500: #f06464;
   --bg: var(--ink-900);
   --bg-panel: var(--ink-800);
@@ -38,9 +38,9 @@
   --accent-hover: var(--brass-400);
   --accent-ink: var(--brass-ink);
   --danger: var(--rust-500);
-  --font-serif: "EB Garamond", "Iowan Old Style", Georgia, serif;
-  --font-sans: Geist, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
-  --font-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --font-serif: "Plus Jakarta Sans", "Iowan Old Style", Georgia, serif;
+  --font-sans: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   --text-xs: 12px;
   --lh-xs: 1.35;
   --text-sm: 13px;
@@ -740,3 +740,6 @@ body.layout-gate-active iframe#artifact {
     max-width: min(220px, 70vw);
   }
 }
+
+
+
